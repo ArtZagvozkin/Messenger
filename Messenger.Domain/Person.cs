@@ -13,7 +13,7 @@ namespace Messenger.Domain
         public string Phone { get; set; }
         public string Email { get; set; }
         public DateTime RegDate { get; set; }
-        public bool Status { get; set; }
+        public int Status { get; set; }
         public string Description { get; set; }
     }
 }
