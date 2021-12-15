@@ -6,10 +6,12 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.OpenApi.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace Messenger.API
 {
@@ -26,12 +28,12 @@ namespace Messenger.API
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-
-            //???
-            //???
-            //???
-            //???
-            //???
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Messenger", Version = "v1" });
+            });
+            services.AddDbContext<Messenger.Infrastructure.Context>(options =>
+                    options.UseSqlServer(Configuration.GetConnectionString("MessangerDd")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -40,6 +42,8 @@ namespace Messenger.API
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                app.UseSwagger();
+                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Messenger v1"));
             }
 
             app.UseHttpsRedirection();

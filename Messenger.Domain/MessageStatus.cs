@@ -2,7 +2,7 @@
 
 namespace Messenger.Domain
 {
-    public class MessegeStatus
+    public class MessageStatus
     {
         //Properties
         public Guid Id { get; set; }
@@ -10,9 +10,9 @@ namespace Messenger.Domain
         public int Status { get; set; }
 
         //Foreign key
-        public Guid MessegeId { get; set; }
+        public Guid MessageId { get; set; }
 
         //Navigation properties
-        public Messege Messege { get; set; }
+        public Message Message { get; set; }
     }
 }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Messenger.Domain
 {
-    public class Messege
+    public class Message
     {
         //Properties
         public Guid Id { get; set; }

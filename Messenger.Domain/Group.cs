@@ -6,15 +6,15 @@ namespace Messenger.Domain
     public class Group
     {
         //Properties
-        Guid Id { get; set; }
-        Guid OwnerId { get; set; }
-        string Name { get; set; }
-        int Type { get; set; }
-        DateTime CreationDate { get; set; }
-        string Description { get; set; }
+        public Guid Id { get; set; }
+        public Guid OwnerId { get; set; }
+        public string Name { get; set; }
+        public int Type { get; set; }
+        public DateTime CreationDate { get; set; }
+        public string Description { get; set; }
 
         //Navigation properties
         public List<GroupMembership> Memberships { get; set; }
-        public List<Messege> Messeges { get; set; }
+        public List<Message> Messages { get; set; }
     }
 }
