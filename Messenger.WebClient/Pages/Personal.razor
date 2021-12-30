@@ -1,0 +1,67 @@
+﻿@page "/personal/{Id}"
+
+@using System.Net.Http
+@using System.Net.Http.Json
+@using System.Threading.Tasks
+@using Messenger.Domain
+@inject NavigationManager NavigationManager
+@inject HttpClient Http
+
+<h3>Личный кабинет</h3>
+<h3>@name_obj</h3>
+
+<div class="row">
+    <div class="col-md-4">
+        <div class="form-group">
+            <input type="button" class="btn btn-primary" @onclick="@LogOut" value="Сменить пользователя" />
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-4">
+        <div class="form-group">
+            <input type="button" class="btn btn-primary" @onclick="@PersonUpdate" value="Редактировать профиль" />
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-4">
+        <div class="form-group">
+            <input type="button" class="btn btn-primary" @onclick="@PersonDel" value="Удалить аккаунт" />
+        </div>
+    </div>
+</div>
+
+
+@code {
+    [Parameter]
+    public string Id { get; set; }
+
+    Person obj = new Person();
+    String name_obj;
+
+    protected override async Task OnInitializedAsync()
+    {
+        obj = await Http.GetFromJsonAsync<Person>("https://localhost:44351/API/Person/" + Id);
+        name_obj = obj.Surname + " " + obj.Name + " " + obj.Midname;
+    }
+
+    void LogOut()
+    {
+        NavigationManager.NavigateTo("");
+    }
+
+    void PersonUpdate()
+    {
+        NavigationManager.NavigateTo("PersonEdit/" + Id);
+    }
+
+    async void PersonDel()
+    {
+        await Http.DeleteAsync("https://localhost:44351/API/Person/" + CurrentUser.Id);
+        NavigationManager.NavigateTo("");
+
+    }
+}

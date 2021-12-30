@@ -1,0 +1,78 @@
+﻿@page "/PersonAdd"
+
+@using System.Net.Http
+@inject HttpClient Http
+@using System.Net.Http.Json
+@using System.Threading.Tasks
+@using Messenger.Domain
+@inject NavigationManager NavigationManager
+
+<h2>Новая пользователь</h2>
+<hr/>
+
+<form>
+    <div class="row">
+        <div class="col-md-8">
+            <div class="form-group">
+                <label for="Surname" class="control-label">Фамилия</label>
+                <input form="Surname" class="form-control" @bind="@obj.Surname" />
+            </div>
+            <div class="form-group">
+                <label for="Name" class="control-label">Имя</label>
+                <input form="Name" class="form-control" @bind="@obj.Name" />
+            </div>
+            <div class="form-group">
+                <label for="Midname" class="control-label">Отчество</label>
+                <input form="Midname" class="form-control" @bind="@obj.Midname" />
+            </div>
+            <div class="form-group">
+                <label for="HeldPost" class="control-label">Должность</label>
+                <input form="HeldPost" class="form-control" @bind="@obj.HeldPost" />
+            </div>
+            <div class="form-group">
+                <label for="Phone" class="control-label">Телефон</label>
+                <input form="Phone" class="form-control" @bind="@obj.Phone" />
+            </div>
+            <div class="form-group">
+                <label for="Email" class="control-label">E-mail</label>
+                <input form="Email" class="form-control" @bind="@obj.Email" />
+            </div>
+            <div class="form-group">
+                <label for="RegDate" class="control-label">Дата регистрации</label>
+                <input form="RegDate" class="form-control" @bind="@obj.RegDate" />
+            </div>
+            <div class="form-group">
+                <label for="Status" class="control-label">Статус</label>
+                <input form="Status" class="form-control" @bind="@obj.Status" />
+            </div>
+            <div class="form-group">
+                <label for="Description" class="control-label">Описание</label>
+                <input form="Description" class="form-control" @bind="@obj.Description" />
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="form-group">
+                <input type="button" class="btn btn-primary" @onclick="@CreateGroup" value="Создать" />
+                <input type="button" class="btn btn-primary" @onclick="@Cancel" value="Отмета" />
+            </div>
+        </div>
+    </div>
+</form>
+
+@code {
+    Person obj = new Person();
+    protected async void CreateGroup()
+    {
+        Guid newGuid = System.Guid.NewGuid();
+        CurrentUser.Id = newGuid;
+        obj.Id = newGuid;
+        await Http.PostAsJsonAsync("https://localhost:44351/API/Person/", obj);
+        NavigationManager.NavigateTo("personal/" + newGuid);
+    }
+    void Cancel()
+    {
+        NavigationManager.NavigateTo("");
+    }
+}

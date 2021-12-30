@@ -1,0 +1,61 @@
+﻿@using Messenger.WebClient
+@inject NavigationManager NavigationManager
+@*<div class="top-row pl-4 navbar navbar-dark">
+        <a class="navbar-brand" href="">Создать группу</a>
+        <button class="navbar-toggler" @onclick="ToggleNavMenu">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+    </div>
+    <div class="top-row pl-4 navbar navbar-dark">
+        <a class="navbar-brand" href="">Вступить в группу</a>
+        <button class="navbar-toggler" @onclick="ToggleNavMenu">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+    </div>*@
+
+
+<div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
+    <ul class="nav flex-column">
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="@currentPersonal" Match="NavLinkMatch.All">
+                <span class="oi oi-person" aria-hidden="true"></span> Личный кабиент
+            </NavLink>
+        </li>
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="@currentPersons" Match="NavLinkMatch.All">
+                <span class="oi oi-book" aria-hidden="true"></span> Контакты
+            </NavLink>
+        </li>
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="@currentGroup" Match="NavLinkMatch.All">
+                <span class="oi oi-book" aria-hidden="true"></span> Группы
+            </NavLink>
+        </li>
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="@currentMessages" Match="NavLinkMatch.All">
+                <span class="oi oi-chat" aria-hidden="true"></span> Сообщения
+            </NavLink>
+        </li>
+
+    </ul>
+</div>
+
+
+@code {
+    public String currentPersonal = "personal/" + CurrentUser.Id.ToString();
+    public String currentPersons = "persons/" + CurrentUser.Id.ToString();
+    public String currentGroup = "groups/" + CurrentUser.Id.ToString();
+    public String currentMessages = "messages/" + CurrentUser.Id.ToString();
+
+    private bool collapseNavMenu = true;
+    private string NavMenuCssClass => null;
+
+    private void ToggleNavMenu()
+    {
+        currentPersonal = "personal/" + CurrentUser.Id.ToString();
+        currentPersons = "persons/" + CurrentUser.Id.ToString();
+        currentGroup = "groups/" + CurrentUser.Id.ToString();
+        currentMessages = "messages/" + CurrentUser.Id.ToString();
+        collapseNavMenu = !collapseNavMenu;
+    }
+}

@@ -1,0 +1,89 @@
+﻿@page "/ChoosePerson"
+@using System.Net.Http
+@using System.Net.Http.Json
+@using System.Threading.Tasks
+@using Messenger.Domain
+@using Messenger.WebClient
+@inject HttpClient Http
+@inject NavigationManager NavigationManager
+
+<h3>Выберите пользователя</h3>
+<p>@ContactAdd</p>
+
+
+@if (persons == null)
+{
+    //NavigationManager.NavigateTo("authorization");
+    @*<p></p>*@
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Фамилия</th>
+                <th>Имя</th>
+                <th>Отчество</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var person in persons)
+            {
+            <tr>
+                <td>@person.Surname</td>
+                <td>@person.Name</td>
+                <td>@person.Midname</td>
+                <td>
+                    <input type="button" class="btn btn-primary" @onclick="@(e => SelectUser(person.Id))" value="Выбрать" />
+                </td>
+            </tr>
+            }
+        </tbody>
+    </table>
+}
+
+<div class="row">
+    <div class="col-md-4">
+        <div class="form-group">
+            <input type="button" class="btn btn-primary" @onclick="@Cancel" value="Отмета" />
+        </div>
+    </div>
+</div>
+
+
+@code {
+    [Parameter]
+    public string ContactAdd { get; set; }
+
+    private IEnumerable<Person>
+        persons;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        persons = await Http.GetFromJsonAsync<IEnumerable<Person>>
+("https://localhost:44351/API/person");
+
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        persons = await Http.GetFromJsonAsync<IEnumerable<Person>
+    >
+    ("https://localhost:44351/API/person");
+    }
+
+    void SelectUser(Guid Id)
+    {
+        //Program.currentUserId = Id;
+        CurrentUser.Id = Id;
+        NavigationManager.NavigateTo("personal/" + Id);
+
+
+    }
+
+    void Cancel()
+    {
+        NavigationManager.NavigateTo("");
+    }
+}

@@ -1,0 +1,117 @@
+﻿@page "/messages/{Id}"
+
+@using System.Net.Http
+@using System.Net.Http.Json
+@using System.Threading.Tasks
+@using Messenger.Domain
+@inject NavigationManager NavigationManager
+@inject HttpClient Http
+
+<h3>Группы</h3>
+@*<h3>@Id</h3>*@
+
+
+
+@if (groups == null)
+{
+    <p></p>
+    //NavigationManager.NavigateTo("authorization");
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Название</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var group in groups)
+            {
+                <tr>
+                    <td>@group.Name</td>
+                    <td>
+                        @{
+                            <input type="button" class="btn btn-primary" @onclick="@(e => gotoChat(@group.Id))" value="Перейти" />
+                        }
+                    </td>
+
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+
+
+@code {
+    [Parameter]
+    public string Id { get; set; }
+
+    private IEnumerable<Group> groups;
+    private IEnumerable<Person> persons;
+    private IEnumerable<GroupMembership> groupMemberships;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        groups = await Http.GetFromJsonAsync<IEnumerable<Group>>("https://localhost:44351/API/Group");
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        groups = await Http.GetFromJsonAsync<IEnumerable<Group>>("https://localhost:44351/API/Group");
+        persons = await Http.GetFromJsonAsync<IEnumerable<Person>>("https://localhost:44351/API/Person");
+        groupMemberships = await Http.GetFromJsonAsync<IEnumerable<GroupMembership>>("https://localhost:44351/API/GroupMembership");
+    }
+
+    String GetOwnerName(Guid OwnerId)
+    {
+        foreach (var person in persons)
+        {
+            if (person.Id == OwnerId)
+            {
+                return person.Surname + " " + person.Name + " " + person.Midname;
+            }
+        }
+
+        return "";
+    }
+
+    bool IsOwner(Guid OwnerId)
+    {
+        if (CurrentUser.Id == OwnerId)
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+    bool IsBelong(Guid Id)
+    {
+        foreach (var groupMembership in groupMemberships)
+        {
+            if (groupMembership.GroupId == Id && groupMembership.PersonId == CurrentUser.Id)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    void gotoChat(Guid Id)
+    {
+        NavigationManager.NavigateTo("Chat/" + Id);
+    }
+
+
+    private bool collapseNavMess = true;
+    private string NavMessCssClass => null;
+
+    private void TogglMessMenu()
+    {
+        collapseNavMess = !collapseNavMess;
+    }
+}

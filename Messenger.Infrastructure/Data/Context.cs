@@ -28,11 +28,7 @@ namespace Messenger.Infrastructure
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            //???
-            //???
-            //???
-            //???
-            //???
+
         }
     }
 }

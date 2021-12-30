@@ -1,0 +1,187 @@
+﻿@page "/groups/{id}"
+
+@using System.Net.Http
+@using System.Net.Http.Json
+@using System.Threading.Tasks
+@using Messenger.Domain
+@inject NavigationManager NavigationManager
+@inject HttpClient Http
+
+<h3>Группы</h3>
+@*<h3>@Id</h3>*@
+@*<p>@_group</p>*@
+
+
+<div class="row">
+    <div class="col-md-4">
+        <div class="form-group">
+            <input type="button" class="btn btn-primary" @onclick="@GroupAdd" value="Создать группу" />
+        </div>
+    </div>
+</div>
+
+@if (groups == null)
+{
+    <p></p>
+    //NavigationManager.NavigateTo("authorization");
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Название</th>
+                <th>Владелец</th>
+                <th>Дата создания</th>
+                <th>Описание</th>
+                <th></th>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var group in groups)
+            {
+            <tr>
+                <td>@group.Name</td>
+                <td>@GetOwnerName(@group.OwnerId)</td>
+                <td>@group.CreationDate</td>
+                <td>@group.Description</td>
+                <td>
+                    @{
+                        if (IsOwner(@group.OwnerId))
+                        {
+                            <input type="button" class="btn btn-primary" @onclick="@(e => GroupEdit(@group.Id))" value="Изменить" />
+                        }
+                    }
+                </td>
+                <td>
+                    @{
+                        if (IsOwner(@group.OwnerId))
+                        {
+                            <input type="button" class="btn btn-primary" @onclick="@(e => GroupDelete(@group.Id))" value="Удалить" />
+                        }
+                    }
+                </td>
+                <td>
+                    @{
+                        if (IsBelong(@group.Id))
+                        {
+                            <input type="button" class="btn btn-primary" @onclick="@(e => GroupLeave(@group.Id))" value="Выйти" />
+                        }
+                        else
+                        {
+                            <input type="button" class="btn btn-primary" @onclick="@(e => GroupJoin(@group.Id))" value="Вступить" />
+                        }
+                    }
+                </td>
+            </tr>
+            }
+        </tbody>
+    </table>
+}
+
+
+@code {
+    [Parameter]
+    public string Id { get; set; }
+    //public string _group { get; set; }
+
+    private IEnumerable<Group> groups;
+    private IEnumerable<Person> persons;
+    private IEnumerable<GroupMembership> groupMemberships;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        groups = await Http.GetFromJsonAsync<IEnumerable<Group>> ("https://localhost:44351/API/Group");
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        groups = await Http.GetFromJsonAsync<IEnumerable<Group>>("https://localhost:44351/API/Group");
+        persons = await Http.GetFromJsonAsync<IEnumerable<Person>>("https://localhost:44351/API/Person");
+        groupMemberships = await Http.GetFromJsonAsync<IEnumerable<GroupMembership>>("https://localhost:44351/API/GroupMembership");
+    }
+
+    String GetOwnerName(Guid OwnerId)
+    {
+        foreach (var person in persons)
+        {
+            if (person.Id == OwnerId)
+            {
+                return person.Surname + " " + person.Name + " " + person.Midname;
+            }
+        }
+
+        return "";
+    }
+
+    bool IsOwner(Guid OwnerId)
+    {
+        if (CurrentUser.Id == OwnerId)
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+    void GroupAdd()
+    {
+        NavigationManager.NavigateTo("GroupAdd");
+    }
+
+    void GroupEdit(Guid Id)
+    {
+        NavigationManager.NavigateTo("GroupEdit/" + Id);
+    }
+
+    async void GroupDelete(Guid Id)
+    {
+        await Http.DeleteAsync("https://localhost:44351/API/Group/" + Id);
+        NavigationManager.NavigateTo("");
+        NavigationManager.NavigateTo("groups/" + CurrentUser.Id);
+    }
+
+
+    bool IsBelong(Guid Id)
+    {
+        foreach (var groupMembership in groupMemberships)
+        {
+            if (groupMembership.GroupId == Id && groupMembership.PersonId == CurrentUser.Id)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    async void GroupJoin(Guid Id)
+    {
+        GroupMembership groupMembership = new GroupMembership();
+
+        groupMembership.GroupId = Id;
+        groupMembership.PersonId = CurrentUser.Id;
+        groupMembership.EmpployeeName = "";
+        groupMembership.Group = null;
+        await Http.PostAsJsonAsync("https://localhost:44351/API/GroupMembership/", groupMembership);
+
+        NavigationManager.NavigateTo("");
+        NavigationManager.NavigateTo("groups/" + CurrentUser.Id);
+    }
+
+    async void GroupLeave(Guid Id)
+    {
+        foreach (var groupMembership in groupMemberships)
+        {
+            if (groupMembership.GroupId == Id && groupMembership.PersonId == CurrentUser.Id)
+            {
+                await Http.DeleteAsync("https://localhost:44351/API/GroupMembership/" + groupMembership.Id);
+                NavigationManager.NavigateTo("");
+                NavigationManager.NavigateTo("groups/" + CurrentUser.Id);
+                return;
+            }
+        }
+    }
+}

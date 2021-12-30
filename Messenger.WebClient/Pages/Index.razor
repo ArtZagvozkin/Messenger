@@ -1,0 +1,33 @@
+﻿@page "/"
+@page "/personal"
+
+
+@using System.Net.Http
+@using System.Net.Http.Json
+@using System.Threading.Tasks
+@using Messenger.Domain
+@inject NavigationManager NavigationManager
+@inject HttpClient Http
+
+<h3>Авторизация</h3>
+
+<div class="row">
+    <div class="col-md-4">
+        <div class="form-group">
+            <input type="button" class="btn btn-primary" @onclick="@ChoosePerson" value="Выбрать аккаунт" />
+            <input type="button" class="btn btn-primary" @onclick="@NewUser" value="Создать новый" />
+        </div>
+    </div>
+</div>
+
+
+@code {
+    void ChoosePerson()
+    {
+        NavigationManager.NavigateTo("ChoosePerson");
+    }
+    void NewUser()
+    {
+        NavigationManager.NavigateTo("PersonAdd");
+    }
+}

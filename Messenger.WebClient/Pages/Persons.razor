@@ -1,0 +1,74 @@
+﻿@page "/persons/{id}"
+
+@using System.Net.Http
+@using System.Net.Http.Json
+@using System.Threading.Tasks
+@using Messenger.Domain
+@inject HttpClient Http
+@inject NavigationManager NavigationManager
+
+<h3>Контакты</h3>
+@*<h3>@Id</h3>*@
+@*<p>@ContactAdd</p>*@
+
+
+
+@if (persons == null)
+{
+    //NavigationManager.NavigateTo("authorization");
+    @*<p></p>*@
+}
+else
+{
+<table class="table">
+    <thead>
+        <tr>
+            <th>Фамилия</th>
+            <th>Имя</th>
+            <th>Отчество</th>
+            <th>Должность</th>
+            <th>Телефон</th>
+            <th>E-mail</th>
+            <th>Дата регистрациия</th>
+            <th>Описание</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var person in persons)
+        {
+        <tr>
+            <td>@person.Surname</td>
+            <td>@person.Name</td>
+            <td>@person.Midname</td>
+            <td>@person.HeldPost</td>
+            <td>@person.Phone</td>
+            <td>@person.Email</td>
+            <td>@person.RegDate</td>
+            <td>@person.Description</td>
+        </tr>
+        }
+    </tbody>
+</table>
+}
+
+
+
+@code {
+    [Parameter]
+    public string Id { get; set; }
+    //public string ContactAdd { get; set; }
+
+    private IEnumerable<Person>
+    persons;
+
+    protected override async Task OnParametersSetAsync()
+    {
+    persons = await Http.GetFromJsonAsync<IEnumerable<Person>> ("https://localhost:44351/API/person");
+
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        persons = await Http.GetFromJsonAsync<IEnumerable<Person>> ("https://localhost:44351/API/person");
+    }
+}
