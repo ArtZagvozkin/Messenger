@@ -8,11 +8,12 @@ namespace Messenger.Domain
         //Properties
         public Guid Id { get; set; }
         public Guid AuthorId { get; set; }
+        public Guid GroupID { get; set; }
         public DateTime SendDateTime { get; set; }
         public string Context { get; set; }
 
         //Navigation properties
         public List<File> AttachedFile { get; set; }
-        public Group Group { get; set; }
+        //public Group Group { get; set; }
     }
 }

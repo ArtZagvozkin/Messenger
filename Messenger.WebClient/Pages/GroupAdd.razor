@@ -53,10 +53,10 @@
     protected async void CreateGroup()
     {
         await Http.PostAsJsonAsync("https://localhost:44351/API/Group/", obj);
-        NavigationManager.NavigateTo("groups/" + CurrentUser.Id);
+        NavigationManager.NavigateTo("groups/" + Current.UserId);
     }
     void Cancel()
     {
-        NavigationManager.NavigateTo("groups/" + CurrentUser.Id);
+        NavigationManager.NavigateTo("groups/" + Current.UserId);
     }
 }

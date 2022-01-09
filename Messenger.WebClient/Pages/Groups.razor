@@ -8,8 +8,6 @@
 @inject HttpClient Http
 
 <h3>Группы</h3>
-@*<h3>@Id</h3>*@
-@*<p>@_group</p>*@
 
 
 <div class="row">
@@ -85,7 +83,6 @@ else
 @code {
     [Parameter]
     public string Id { get; set; }
-    //public string _group { get; set; }
 
     private IEnumerable<Group> groups;
     private IEnumerable<Person> persons;
@@ -118,7 +115,7 @@ else
 
     bool IsOwner(Guid OwnerId)
     {
-        if (CurrentUser.Id == OwnerId)
+        if (Current.UserId == OwnerId)
         {
             return true;
         }
@@ -140,7 +137,7 @@ else
     {
         await Http.DeleteAsync("https://localhost:44351/API/Group/" + Id);
         NavigationManager.NavigateTo("");
-        NavigationManager.NavigateTo("groups/" + CurrentUser.Id);
+        NavigationManager.NavigateTo("groups/" + Current.UserId);
     }
 
 
@@ -148,7 +145,7 @@ else
     {
         foreach (var groupMembership in groupMemberships)
         {
-            if (groupMembership.GroupId == Id && groupMembership.PersonId == CurrentUser.Id)
+            if (groupMembership.GroupId == Id && groupMembership.PersonId == Current.UserId)
             {
                 return true;
             }
@@ -162,24 +159,24 @@ else
         GroupMembership groupMembership = new GroupMembership();
 
         groupMembership.GroupId = Id;
-        groupMembership.PersonId = CurrentUser.Id;
+        groupMembership.PersonId = Current.UserId;
         groupMembership.EmpployeeName = "";
         groupMembership.Group = null;
         await Http.PostAsJsonAsync("https://localhost:44351/API/GroupMembership/", groupMembership);
 
         NavigationManager.NavigateTo("");
-        NavigationManager.NavigateTo("groups/" + CurrentUser.Id);
+        NavigationManager.NavigateTo("groups/" + Current.UserId);
     }
 
     async void GroupLeave(Guid Id)
     {
         foreach (var groupMembership in groupMemberships)
         {
-            if (groupMembership.GroupId == Id && groupMembership.PersonId == CurrentUser.Id)
+            if (groupMembership.GroupId == Id && groupMembership.PersonId == Current.UserId)
             {
                 await Http.DeleteAsync("https://localhost:44351/API/GroupMembership/" + groupMembership.Id);
                 NavigationManager.NavigateTo("");
-                NavigationManager.NavigateTo("groups/" + CurrentUser.Id);
+                NavigationManager.NavigateTo("groups/" + Current.UserId);
                 return;
             }
         }

@@ -7,8 +7,6 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
-using MudBlazor;
-using MudBlazor.Services;
 
 namespace Messenger.WebClient
 {
@@ -18,19 +16,18 @@ namespace Messenger.WebClient
         public static async Task Main(string[] args)
         {
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
-            builder.RootComponents.Add<App>("#app");
 
+            builder.RootComponents.Add<App>("#app");
             builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 
             await builder.Build().RunAsync();
-
         }
     }
 
-
-    public class CurrentUser
+    public class Current
     {
-        public static Guid Id { get; set; }
+        public static Guid UserId { get; set; }
+        public static Guid GroupId { get; set; }
     }
 
 

@@ -66,7 +66,7 @@
     protected async void CreateGroup()
     {
         Guid newGuid = System.Guid.NewGuid();
-        CurrentUser.Id = newGuid;
+        Current.UserId = newGuid;
         obj.Id = newGuid;
         await Http.PostAsJsonAsync("https://localhost:44351/API/Person/", obj);
         NavigationManager.NavigateTo("personal/" + newGuid);

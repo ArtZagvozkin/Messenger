@@ -5,19 +5,13 @@
         <NavMenu/>
     </div>
 
-    <div class="main">
-        @*<div class="top-row px-4">
-            <a href="http://blazor.net" target="_blank" class="ml-md-auto">About</a>
-        </div>*@
-
-        <div class="content px-4">
-            @Body
-        </div>
+    <div class="main m-0 pr-5" style="max-height:100%;">
+        @Body
     </div>
 </div>
 
 
 @code {
-    public String currentGroup = "groups/" + CurrentUser.Id.ToString();
-    public String currentMessages = "messages/" + CurrentUser.Id.ToString();
+    public String currentGroup = "groups/" + Current.UserId.ToString();
+    public String currentMessages = "messages/" + Current.UserId.ToString();
 }

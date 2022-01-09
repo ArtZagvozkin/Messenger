@@ -34,6 +34,8 @@ namespace Messenger.API
             });
             services.AddDbContext<Messenger.Infrastructure.Context>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("MessangerDd")));
+
+            services.AddSignalR();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -61,7 +63,9 @@ namespace Messenger.API
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHub<MessengerHub>("/newMess");
             });
+
         }
     }
 }

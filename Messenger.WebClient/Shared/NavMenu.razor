@@ -42,20 +42,20 @@
 
 
 @code {
-    public String currentPersonal = "personal/" + CurrentUser.Id.ToString();
-    public String currentPersons = "persons/" + CurrentUser.Id.ToString();
-    public String currentGroup = "groups/" + CurrentUser.Id.ToString();
-    public String currentMessages = "messages/" + CurrentUser.Id.ToString();
+    public String currentPersonal = "personal/" + Current.UserId.ToString();
+    public String currentPersons = "persons/" + Current.UserId.ToString();
+    public String currentGroup = "groups/" + Current.UserId.ToString();
+    public String currentMessages = "chat/" + Current.UserId.ToString();
 
     private bool collapseNavMenu = true;
     private string NavMenuCssClass => null;
 
     private void ToggleNavMenu()
     {
-        currentPersonal = "personal/" + CurrentUser.Id.ToString();
-        currentPersons = "persons/" + CurrentUser.Id.ToString();
-        currentGroup = "groups/" + CurrentUser.Id.ToString();
-        currentMessages = "messages/" + CurrentUser.Id.ToString();
+        currentPersonal = "personal/" + Current.UserId.ToString();
+        currentPersons = "persons/" + Current.UserId.ToString();
+        currentGroup = "groups/" + Current.UserId.ToString();
+        currentMessages = "chat/" + Current.UserId.ToString();
         collapseNavMenu = !collapseNavMenu;
     }
 }

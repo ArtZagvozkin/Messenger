@@ -60,7 +60,7 @@
 
     async void PersonDel()
     {
-        await Http.DeleteAsync("https://localhost:44351/API/Person/" + CurrentUser.Id);
+        await Http.DeleteAsync("https://localhost:44351/API/Person/" + Current.UserId);
         NavigationManager.NavigateTo("");
 
     }

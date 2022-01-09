@@ -74,11 +74,11 @@
     protected async void CreateGroup()
     {
         await Http.PutAsJsonAsync("https://localhost:44351/API/Person/" + Id, obj);
-        NavigationManager.NavigateTo("personal/" + CurrentUser.Id);
+        NavigationManager.NavigateTo("personal/" + Current.UserId);
     }
 
     void Cancel()
     {
-        NavigationManager.NavigateTo("personal/" + CurrentUser.Id);
+        NavigationManager.NavigateTo("personal/" + Current.UserId);
     }
 }

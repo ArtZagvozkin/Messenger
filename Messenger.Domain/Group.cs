@@ -15,6 +15,6 @@ namespace Messenger.Domain
 
         //Navigation properties
         public List<GroupMembership> Memberships { get; set; }
-        public List<Message> Messages { get; set; }
+        //public List<Message> Messages { get; set; }
     }
 }
